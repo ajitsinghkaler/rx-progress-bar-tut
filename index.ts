@@ -58,12 +58,12 @@ const requests$ = array$.pipe(concatAll());
 const clicks$ = fromEvent(loadButton, "click");
 // .pipe(tap(console.log));
 
-const progress$ = clicks$
-  .pipe(
-    switchMapTo(requests$),
-    share()
-  )
-  .pipe(tap(console.log));
+const progress$ = clicks$.pipe(
+  switchMapTo(requests$),
+  share(),
+  tap(console.log)
+);
+// .pipe();
 
 const count$ = array$.pipe(count());
 
