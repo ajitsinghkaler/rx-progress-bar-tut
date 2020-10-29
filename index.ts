@@ -60,6 +60,7 @@ const clicks$ = fromEvent(loadButton, "click");
 
 const progress$ = clicks$.pipe(
   switchMapTo(requests$),
+  share(),
   tap(console.log)
 );
 // .pipe();
@@ -69,11 +70,18 @@ const count$ = array$.pipe(
   tap(a => console.log(a, count))
 );
 
-progress$
+const ratio$ = progress$.pipe(
+  scan(current => current + 1, 0),
+  withLatestFrom(count$, (current, count) => current / count),
+  tap(console.log)
+);
+
+clicks$
   .pipe(
-    tap(displayData),
-    scan(current => current + 1, 0),
-    withLatestFrom(count$, (current, count) => current / count),
-    tap(console.log)
+    // tap(console.log),
+    switchMapTo(ratio$)
+    // tap(console.log)
   )
   .subscribe(updateProgress);
+
+progress$.subscribe(displayData);
