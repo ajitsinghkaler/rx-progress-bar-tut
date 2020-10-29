@@ -65,20 +65,16 @@ const progress$ = clicks$.pipe(
 );
 // .pipe();
 
-const count$ = array$.pipe(count());
-
-const ratio$ = progress$.pipe(
-  scan(current => current + 1, 0),
-  withLatestFrom(count$, (current, count) => current / count),
-  tap(console.log)
+const count$ = array$.pipe(
+  count(),
+  tap(a => console.log(a, count))
 );
 
-clicks$
+progress$
   .pipe(
-    // tap(console.log),
-    switchMapTo(ratio$)
-    // tap(console.log)
+    tap(displayData),
+    scan(current => current + 1, 0),
+    withLatestFrom(count$, (current, count) => current / count),
+    tap(console.log)
   )
   .subscribe(updateProgress);
-
-progress$.subscribe(displayData);
