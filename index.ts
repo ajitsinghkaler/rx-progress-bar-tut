@@ -60,7 +60,6 @@ const clicks$ = fromEvent(loadButton, "click");
 
 const progress$ = clicks$.pipe(
   switchMapTo(requests$),
-  share(),
   tap(console.log)
 );
 // .pipe();
